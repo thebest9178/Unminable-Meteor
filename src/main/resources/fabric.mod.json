@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "unmineableminer",
+  "version": "${version}",
+  "name": "Unminable Miner",
+  "description": "Mod for mining unmineable blocks.",
+  "authors": [
+    "thebest9178"
+  ],
+  "contact": {
+    "repo": "https://github.com/thebest9178"
+  },
+  "icon": "assets/unminable-miner/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "thebest9178.unminableminer.UnminableMiner"
+    ]
+  },
+  "mixins": [
+    "unminable-miner.mixins.json"
+  ],
+  "custom": {
+    "meteor-client:color": "225,25,25"
+  },
+  "depends": {
+    "java": ">=17",
+    "minecraft": ">=1.18",
+    "meteor-client": "*"
+  }
+}

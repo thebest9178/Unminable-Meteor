@@ -127,7 +127,7 @@ public class TargetBlock {
                 redstoneTorchBlockPos = slimeBlockPos.up();
             } else {
                 this.status = Status.FAILED;
-                Messager.actionBar("Failed to place redstone torch.");
+                Messenger.actionBar("Failed to place redstone torch.");
             }
         } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !(this.world.getBlockState(this.blockPos).getHardness(this.world, this.blockPos) < 0)) {
             this.status = Status.RETRACTED;
@@ -150,7 +150,7 @@ public class TargetBlock {
             this.status = Status.UNINITIALIZED;
         } else if (!CheckingEnvironment.has2BlocksOfPlaceToPlacePiston(world, this.blockPos)) {
             this.status = Status.FAILED;
-            Messager.actionBar("Failed to place piston.");
+            Messenger.actionBar("Failed to place piston.");
         } else {
             this.status = Status.FAILED;
         }

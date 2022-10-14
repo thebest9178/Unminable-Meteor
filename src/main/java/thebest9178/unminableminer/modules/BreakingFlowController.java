@@ -24,7 +24,7 @@ public class BreakingFlowController {
 
             String haveEnoughItems = InventoryManager.warningMessage();
             if (haveEnoughItems != null) {
-                Messager.actionBar(haveEnoughItems);
+                Messenger.actionBar(haveEnoughItems);
                 return;
             }
 
@@ -34,7 +34,7 @@ public class BreakingFlowController {
                 System.out.println("new task.");
             }
         } else {
-            Messager.actionBar("Please make sure the block you hit is still a valid block.");
+            Messenger.actionBar("Please make sure the block you hit is still a valid block.");
         }
     }
 
@@ -89,9 +89,9 @@ public class BreakingFlowController {
         if(working) {
             return;
         } else {
-            /*Messager.chat("");
-            Messager.chat("§5Unmineable Miner started. Left click an unminable block to break it.§r");
-            Messager.chat("");*/
+            /*Messenger.chat("");
+            Messenger.chat("§5Unmineable Miner started. Left click an unminable block to break it.§r");
+            Messenger.chat("");*/
             working = true;
         }
     }
@@ -100,9 +100,9 @@ public class BreakingFlowController {
         if(!working) {
             return;
         } else {
-            /*Messager.chat("");
-            Messager.chat("§5Unminable Miner stopped.§r");
-            Messager.chat("");*/
+            /*Messenger.chat("");
+            Messenger.chat("§5Unminable Miner stopped.§r");
+            Messenger.chat("");*/
             working = false;
         }
     }

@@ -1,5 +1,6 @@
 package thebest9178.unminableminer.modules;
 
+import meteordevelopment.meteorclient.systems.modules.Modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -16,25 +17,19 @@ public class BreakingFlowController {
 
     private static boolean working = false;
 
-
     public static void addBlockPosToList(BlockPos pos) {
         ClientWorld world = MinecraftClient.getInstance().world;
-        if (world.getBlockState(pos).getHardness(world, pos) < 0) {
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
 
-            String haveEnoughItems = InventoryManager.warningMessage();
-            if (haveEnoughItems != null) {
-                Messenger.actionBar(haveEnoughItems);
-                return;
-            }
+        String haveEnoughItems = InventoryManager.warningMessage();
+        if (haveEnoughItems != null) {
+            Messenger.actionBar(haveEnoughItems);
+            return;
+        }
 
-            if (shouldAddNewTargetBlock(pos)){
-                TargetBlock targetBlock = new TargetBlock(pos, world);
-                cachedTargetBlockList.add(targetBlock);
-                System.out.println("new task.");
-            }
-        } else {
-            Messenger.actionBar("Please make sure the block you hit is still a valid block.");
+        if (shouldAddNewTargetBlock(pos)){
+            TargetBlock targetBlock = new TargetBlock(pos, world);
+            cachedTargetBlockList.add(targetBlock);
+            System.out.println("new task.");
         }
     }
 
@@ -58,7 +53,7 @@ public class BreakingFlowController {
                 break;
             }
 
-            if (blockInPlayerRange(selectedBlock.getBlockPos(), player, 3.4f)) {
+            if (blockInPlayerRange(selectedBlock.getBlockPos(), player, Modules.get().get(UnminableMiner.class).range.get().floatValue())) {
                 TargetBlock.Status status = cachedTargetBlockList.get(i).tick();
                 if (status == TargetBlock.Status.RETRACTING) {
                     continue;
@@ -67,7 +62,6 @@ public class BreakingFlowController {
                 } else {
                     break;
                 }
-
             }
         }
     }
@@ -85,25 +79,7 @@ public class BreakingFlowController {
         return true;
     }
 
-    public static void switchOn() {
-        if(working) {
-            return;
-        } else {
-            /*Messenger.chat("");
-            Messenger.chat("§5Unmineable Miner started. Left click an unminable block to break it.§r");
-            Messenger.chat("");*/
-            working = true;
-        }
-    }
-
-    public static void switchOff() {
-        if(!working) {
-            return;
-        } else {
-            /*Messenger.chat("");
-            Messenger.chat("§5Unminable Miner stopped.§r");
-            Messenger.chat("");*/
-            working = false;
-        }
+    public static void setWorking(boolean work) {
+        working = work;
     }
 }

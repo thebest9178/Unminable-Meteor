@@ -24,31 +24,23 @@ public class BlockPlacer {
         placeBlockWithoutInteractingBlock(minecraftClient, hitResult);
     }
 
-    public static void pistonPlacement(BlockPos pos, Direction direction) {
+    public static void pistonPlacement(BlockPos blockPos, Direction direction) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        double x = pos.getX();
 
         //Directly issue the packet to change the perspective of the player entity on the server side
         PlayerEntity player = minecraftClient.player;
-        float pitch;
-        switch (direction) {
-            case UP:
-                pitch = 90f;
-                break;
-            case DOWN:
-                pitch = -90f;
-                break;
-            default:
-                pitch = 90f;
-                break;
-        }
+        float pitch = switch (direction) {
+            case UP -> 90f;
+            case DOWN -> -90f;
+            default -> 90f;
+        };
 
         minecraftClient.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(player.getYaw(1.0f), pitch, player.isOnGround()));
 
-        Vec3d vec3d = new Vec3d(x, pos.getY(), pos.getZ());
+        Vec3d pos = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 
         InventoryManager.switchToItem(Blocks.PISTON);
-        BlockHitResult hitResult = new BlockHitResult(vec3d, Direction.UP, pos, false);
+        BlockHitResult hitResult = new BlockHitResult(pos, Direction.UP, blockPos, false);
         placeBlockWithoutInteractingBlock(minecraftClient, hitResult);
     }
 
@@ -61,7 +53,6 @@ public class BlockPlacer {
         if (!itemStack.isEmpty() && !player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) {
             ItemUsageContext itemUsageContext = new ItemUsageContext(player, Hand.MAIN_HAND, hitResult);
             itemStack.useOnBlock(itemUsageContext);
-
         }
     }
 }

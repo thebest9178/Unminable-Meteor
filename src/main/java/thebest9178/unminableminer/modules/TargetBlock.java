@@ -1,5 +1,6 @@
 package thebest9178.unminableminer.modules;
 
+import meteordevelopment.meteorclient.systems.modules.Modules;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.client.world.ClientWorld;
@@ -119,6 +120,7 @@ public class TargetBlock {
             this.status = Status.FAILED;
             return;
         }
+        UnminableMiner unminableMiner = Modules.get().get(UnminableMiner.class);
         this.redstoneTorchBlockPos = CheckingEnvironment.findNearbyFlatBlockToPlaceRedstoneTorch(this.world, this.blockPos);
         if (this.redstoneTorchBlockPos == null) {
             this.slimeBlockPos = CheckingEnvironment.findPossibleSlimeBlockPos(world, blockPos);
@@ -129,22 +131,22 @@ public class TargetBlock {
                 this.status = Status.FAILED;
                 Messenger.actionBar("Failed to place redstone torch.");
             }
-        } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !(this.world.getBlockState(this.blockPos).getHardness(this.world, this.blockPos) < 0)) {
+        } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !unminableMiner.isBlockOnWhitelist(world, blockPos)) {
             this.status = Status.RETRACTED;
         } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED)) {
             this.status = Status.EXTENDED;
         } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.MOVING_PISTON)) {
             this.status = Status.RETRACTING;
-        }  else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED) && CheckingEnvironment.findNearbyRedstoneTorch(this.world, this.pistonBlockPos).size() != 0 && (this.world.getBlockState(this.blockPos).getHardness(this.world, this.blockPos) < 0)) {
+        }  else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED) && CheckingEnvironment.findNearbyRedstoneTorch(this.world, this.pistonBlockPos).size() != 0 && !unminableMiner.isBlockOnWhitelist(world, blockPos)) {
             this.status = Status.UNEXTENDED_WITH_POWER_SOURCE;
         } else if (this.hasTried && this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && this.stuckTicksCounter < 15) {
             this.status = Status.NEEDS_WAITING;
             this.stuckTicksCounter++;
-        } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.FACING) == Direction.DOWN && !this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED) && CheckingEnvironment.findNearbyRedstoneTorch(this.world, this.pistonBlockPos).size() != 0 && (this.world.getBlockState(this.blockPos).getHardness(this.world, this.blockPos) < 0)) {
+        } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.FACING) == Direction.DOWN && !this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED) && CheckingEnvironment.findNearbyRedstoneTorch(this.world, this.pistonBlockPos).size() != 0 && !unminableMiner.isBlockOnWhitelist(world, blockPos)) {
             this.status = Status.STUCK;
             this.hasTried = false;
             this.stuckTicksCounter = 0;
-        } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED) && this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.FACING) == Direction.UP && CheckingEnvironment.findNearbyRedstoneTorch(this.world, this.pistonBlockPos).size() == 0 && (this.world.getBlockState(this.blockPos).getHardness(this.world, this.blockPos) < 0)) {
+        } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.EXTENDED) && this.world.getBlockState(this.pistonBlockPos).get(PistonBlock.FACING) == Direction.UP && CheckingEnvironment.findNearbyRedstoneTorch(this.world, this.pistonBlockPos).size() == 0 && !unminableMiner.isBlockOnWhitelist(world, blockPos)) {
             this.status = Status.UNEXTENDED_WITHOUT_POWER_SOURCE;
         } else if (CheckingEnvironment.has2BlocksOfPlaceToPlacePiston(world, this.blockPos)) {
             this.status = Status.UNINITIALIZED;

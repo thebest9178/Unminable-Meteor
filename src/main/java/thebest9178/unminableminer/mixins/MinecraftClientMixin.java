@@ -1,6 +1,6 @@
 package thebest9178.unminableminer.mixins;
 
-import net.minecraft.block.Blocks;
+import meteordevelopment.meteorclient.systems.modules.Modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.hit.BlockHitResult;
@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import thebest9178.unminableminer.modules.BreakingFlowController;
+import thebest9178.unminableminer.modules.UnminableMiner;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -24,7 +25,7 @@ public class MinecraftClientMixin {
 
     @Inject(method = "handleBlockBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void inject(boolean bl, CallbackInfo ci, BlockHitResult blockHitResult, BlockPos blockPos, Direction direction) {
-        if ((world.getBlockState(blockPos).getHardness(world, blockPos) < 0) && !world.getBlockState(blockHitResult.getBlockPos()).isOf(Blocks.NETHER_PORTAL) && BreakingFlowController.isWorking()) {
+        if(BreakingFlowController.isWorking() && Modules.get().get(UnminableMiner.class).isBlockOnWhitelist(world, blockPos)) {
             BreakingFlowController.addBlockPosToList(blockPos);
         }
     }

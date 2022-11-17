@@ -111,10 +111,6 @@ public class TargetBlock {
         return world;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
     private void updateStatus() {
         if (this.tickTimes > 40) {
             this.status = Status.FAILED;
@@ -129,7 +125,7 @@ public class TargetBlock {
                 redstoneTorchBlockPos = slimeBlockPos.up();
             } else {
                 this.status = Status.FAILED;
-                Messenger.actionBar("Failed to place redstone torch.");
+                Modules.get().get(UnminableMiner.class).error("Failed to place redstone torch.");
             }
         } else if (this.world.getBlockState(this.pistonBlockPos).isOf(Blocks.PISTON) && !unminableMiner.isBlockOnWhitelist(world, blockPos)) {
             this.status = Status.RETRACTED;
@@ -152,7 +148,7 @@ public class TargetBlock {
             this.status = Status.UNINITIALIZED;
         } else if (!CheckingEnvironment.has2BlocksOfPlaceToPlacePiston(world, this.blockPos)) {
             this.status = Status.FAILED;
-            Messenger.actionBar("Failed to place piston.");
+            Modules.get().get(UnminableMiner.class).error("Failed to place piston.");
         } else {
             this.status = Status.FAILED;
         }

@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import thebest9178.unminableminer.modules.BreakingFlowController;
 import thebest9178.unminableminer.modules.UnminableMiner;
 
 @Mixin(MinecraftClient.class)
@@ -25,8 +24,8 @@ public class MinecraftClientMixin {
 
     @Inject(method = "handleBlockBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void inject(boolean bl, CallbackInfo ci, BlockHitResult blockHitResult, BlockPos blockPos, Direction direction) {
-        if(BreakingFlowController.isWorking() && Modules.get().get(UnminableMiner.class).isBlockOnWhitelist(world, blockPos)) {
-            BreakingFlowController.addBlockPosToList(blockPos);
+        if(Modules.get().get(UnminableMiner.class).isActive() && Modules.get().get(UnminableMiner.class).isBlockOnWhitelist(world, blockPos)) {
+            Modules.get().get(UnminableMiner.class).addBlockPosToList(blockPos);
         }
     }
 }

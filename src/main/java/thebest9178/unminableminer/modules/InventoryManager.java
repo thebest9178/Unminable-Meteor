@@ -2,36 +2,33 @@ package thebest9178.unminableminer.modules;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.tag.FluidTags;
 
+import static meteordevelopment.meteorclient.MeteorClient.mc;
+
 public class InventoryManager {
     public static boolean switchToItem(ItemConvertible item) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        PlayerInventory playerInventory = minecraftClient.player.getInventory();
-
-        int i = playerInventory.getSlotWithStack(new ItemStack(item));
+        int i = mc.player.getInventory().getSlotWithStack(new ItemStack(item));
 
         if ("diamond_pickaxe".equals(item.toString())) {
-            i = getEfficientTool(playerInventory);
+            i = getEfficientTool(mc.player.getInventory());
         }
 
         if (i != -1) {
             if (PlayerInventory.isValidHotbarIndex(i)) {
-                playerInventory.selectedSlot = i;
+                mc.player.getInventory().selectedSlot = i;
             } else {
-                minecraftClient.interactionManager.pickFromInventory(i);
+                mc.interactionManager.pickFromInventory(i);
             }
-            minecraftClient.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(playerInventory.selectedSlot));
+            mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().selectedSlot));
             return true;
         }
         return false;
@@ -47,10 +44,7 @@ public class InventoryManager {
     }
 
     public static boolean canInstantlyMinePiston() {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        PlayerInventory playerInventory = minecraftClient.player.getInventory();
-
-        for (int i = 0; i < playerInventory.size(); i++) {
+        for (int i = 0; i < mc.player.getInventory().size(); i++) {
             if (getBlockBreakingSpeed(Blocks.PISTON.getDefaultState(), i) > 45f) {
                 return true;
             }
@@ -59,48 +53,37 @@ public class InventoryManager {
     }
 
     private static float getBlockBreakingSpeed(BlockState block, int slot) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        PlayerEntity player = minecraftClient.player;
-        ItemStack stack = player.getInventory().getStack(slot);
+        ItemStack stack = mc.player.getInventory().getStack(slot);
 
         float f = stack.getMiningSpeedMultiplier(block);
         if (f > 1.0F) {
             int i = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
-            ItemStack itemStack = player.getInventory().getStack(slot);
+            ItemStack itemStack = mc.player.getInventory().getStack(slot);
             if (i > 0 && !itemStack.isEmpty()) {
                 f += (float) (i * i + 1);
             }
         }
 
-        if (StatusEffectUtil.hasHaste(player)) {
-            f *= 1.0F + (float) (StatusEffectUtil.getHasteAmplifier(player) + 1) * 0.2F;
+        if (StatusEffectUtil.hasHaste(mc.player)) {
+            f *= 1.0F + (float) (StatusEffectUtil.getHasteAmplifier(mc.player) + 1) * 0.2F;
         }
 
-        if (player.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
-            float k;
-            switch (player.getStatusEffect(StatusEffects.MINING_FATIGUE).getAmplifier()) {
-                case 0:
-                    k = 0.3F;
-                    break;
-                case 1:
-                    k = 0.09F;
-                    break;
-                case 2:
-                    k = 0.0027F;
-                    break;
-                case 3:
-                default:
-                    k = 8.1E-4F;
-            }
+        if (mc.player.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
+            float k = switch (mc.player.getStatusEffect(StatusEffects.MINING_FATIGUE).getAmplifier()) {
+                case 0 -> 0.3F;
+                case 1 -> 0.09F;
+                case 2 -> 0.0027F;
+                default -> 8.1E-4F;
+            };
 
             f *= k;
         }
 
-        if (player.isSubmergedIn(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(player)) {
+        if (mc.player.isSubmergedIn(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(mc.player)) {
             f /= 5.0F;
         }
 
-        if (!player.isOnGround()) {
+        if (!mc.player.isOnGround()) {
             f /= 5.0F;
         }
 
@@ -108,8 +91,7 @@ public class InventoryManager {
     }
 
     public static int getInventoryItemCount(ItemConvertible item) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        PlayerInventory playerInventory = minecraftClient.player.getInventory();
+        PlayerInventory playerInventory = mc.player.getInventory();
         int counter = 0;
 
         for (int i = 0; i < playerInventory.size(); i++) {
@@ -121,8 +103,7 @@ public class InventoryManager {
     }
 
     public static String warningMessage() {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        if (!"survival".equals(minecraftClient.interactionManager.getCurrentGameMode().getName())) {
+        if (!"survival".equals(mc.interactionManager.getCurrentGameMode().getName())) {
             return "Survival Only.";
         }
 
@@ -143,5 +124,4 @@ public class InventoryManager {
         }
         return null;
     }
-
 }

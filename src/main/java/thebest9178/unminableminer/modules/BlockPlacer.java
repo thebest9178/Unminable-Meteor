@@ -13,6 +13,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
@@ -33,21 +34,23 @@ public class BlockPlacer {
 
         mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(mc.player.getYaw(1.0f), pitch, mc.player.isOnGround()));
 
-        Vec3d pos = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        //Vec3d pos = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        Vec3i pos = new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 
         InventoryManager.switchToItem(Blocks.PISTON);
-        BlockHitResult hitResult = new BlockHitResult(pos, Direction.UP, blockPos, false);
+        //BlockHitResult hitResult = new BlockHitResult(pos, Direction.UP, blockPos, false);
+        BlockHitResult hitResult = new BlockHitResult(Vec3d.ofCenter(pos), Direction.DOWN, blockPos, false);
         placeBlockWithoutInteractingBlock(mc, hitResult);
     }
 
     private static void placeBlockWithoutInteractingBlock(MinecraftClient minecraftClient, BlockHitResult hitResult) {
-        ClientPlayerEntity player = minecraftClient.player;
-        ItemStack itemStack = player.getStackInHand(Hand.MAIN_HAND);
+        ItemStack itemStack = mc.player.getStackInHand(Hand.MAIN_HAND);
 
-        minecraftClient.getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, hitResult, 0));
+        mc.getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, hitResult, 0));
+        //mc.player.networkHandler.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, new BlockHitResult(Vec3d.ofCenter(pos), Direction.DOWN, pos, false), 0));
 
-        if (!itemStack.isEmpty() && !player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) {
-            ItemUsageContext itemUsageContext = new ItemUsageContext(player, Hand.MAIN_HAND, hitResult);
+        if (!itemStack.isEmpty() && !mc.player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) {
+            ItemUsageContext itemUsageContext = new ItemUsageContext(mc.player, Hand.MAIN_HAND, hitResult);
             itemStack.useOnBlock(itemUsageContext);
         }
     }

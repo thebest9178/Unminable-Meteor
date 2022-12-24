@@ -39,7 +39,7 @@ public class CheckingEnvironment {
 
     public static boolean has2BlocksOfPlaceToPlacePiston(ClientWorld world, BlockPos blockPos) {
         if (world.getBlockState(blockPos.up()).getHardness(world, blockPos.up()) == 0) {
-            BlockBreaker.breakBlock(world, blockPos.up());
+            BlockBreaker.breakBlock(blockPos.up());
         }
         return world.getBlockState(blockPos.up()).getMaterial().isReplaceable() && world.getBlockState(blockPos.up().up()).getMaterial().isReplaceable();
     }

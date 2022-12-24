@@ -45,6 +45,13 @@ public class UnminableMiner extends Module {
         .build()
     );
 
+    public final Setting<Boolean> swing = sgGeneral.add(new BoolSetting.Builder()
+        .name("swing")
+        .description("Swing hand.")
+        .defaultValue(true)
+        .build()
+    );
+
     public final Setting<Boolean> showErrors = sgGeneral.add(new BoolSetting.Builder()
         .name("show-errors")
         .description("Print errors in chat")
@@ -110,7 +117,7 @@ public class UnminableMiner extends Module {
         for (int i = 0; i < cachedTargetBlockList.size(); i++) {
             TargetBlock selectedBlock = cachedTargetBlockList.get(i);
 
-            //When the player switches worlds or is too far away from the target block, delete all cached tasks
+            //Reset cached tasks when player is not in same dimension as the target block
             if (selectedBlock.getWorld() != mc.world ) {
                 cachedTargetBlockList = new ArrayList<TargetBlock>();
                 break;

@@ -56,19 +56,19 @@ public class TargetBlock {
                 //Destroy the redstone torch
                 ArrayList<BlockPos> nearByRedstoneTorchPosList = CheckingEnvironment.findNearbyRedstoneTorch(world, pistonBlockPos);
                 for (BlockPos pos : nearByRedstoneTorchPosList) {
-                    BlockBreaker.breakBlock(world, pos);
+                    BlockBreaker.breakBlock(pos);
                 }
                 //Destroy out the piston
-                BlockBreaker.breakBlock(this.world, this.pistonBlockPos);
+                BlockBreaker.breakBlock(this.pistonBlockPos);
                 //Place the piston facing down
                 BlockPlacer.pistonPlacement(this.pistonBlockPos, Direction.DOWN);
                 this.hasTried = true;
                 break;
             case RETRACTED:
-                BlockBreaker.breakBlock(world, pistonBlockPos);
-                BlockBreaker.breakBlock(world, pistonBlockPos.up());
+                BlockBreaker.breakBlock(pistonBlockPos);
+                BlockBreaker.breakBlock(pistonBlockPos.up());
                 if (this.slimeBlockPos != null) {
-                    BlockBreaker.breakBlock(world, slimeBlockPos);
+                    BlockBreaker.breakBlock(slimeBlockPos);
                 }
                 return TargetBlock.Status.RETRACTED;
             case RETRACTING:
@@ -78,12 +78,12 @@ public class TargetBlock {
                 BlockPlacer.simpleBlockPlacement(this.redstoneTorchBlockPos, Blocks.REDSTONE_TORCH);
                 break;
             case FAILED:
-                BlockBreaker.breakBlock(world, pistonBlockPos);
-                BlockBreaker.breakBlock(world, pistonBlockPos.up());
+                BlockBreaker.breakBlock(pistonBlockPos);
+                BlockBreaker.breakBlock(pistonBlockPos.up());
                 return TargetBlock.Status.FAILED;
             case STUCK:
-                BlockBreaker.breakBlock(world, pistonBlockPos);
-                BlockBreaker.breakBlock(world, pistonBlockPos.up());
+                BlockBreaker.breakBlock(pistonBlockPos);
+                BlockBreaker.breakBlock(pistonBlockPos.up());
                 break;
             case NEEDS_WAITING:
                 break;

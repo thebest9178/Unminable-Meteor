@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
-import net.minecraft.tag.FluidTags;
+import net.minecraft.registry.tag.FluidTags;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 

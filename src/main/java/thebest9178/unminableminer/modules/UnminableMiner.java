@@ -20,7 +20,6 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
 public class UnminableMiner extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    //TODO: Add a button to print a help message explaining how to use it
     //TODO: Only add block pos to list when the player first clicks or when it is newly selected while player holds left click
     public final Setting<Double> range = sgGeneral.add(new DoubleSetting.Builder()
         .name("range")

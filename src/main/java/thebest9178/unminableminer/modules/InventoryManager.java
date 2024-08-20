@@ -2,6 +2,7 @@ package thebest9178.unminableminer.modules;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.effect.StatusEffectUtil;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
@@ -57,7 +59,7 @@ public class InventoryManager {
 
         float f = stack.getMiningSpeedMultiplier(block);
         if (f > 1.0F) {
-            int i = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+            int i = EnchantmentHelper.getLevel((RegistryEntry<Enchantment>) Enchantments.EFFICIENCY, stack);
             ItemStack itemStack = mc.player.getInventory().getStack(slot);
             if (i > 0 && !itemStack.isEmpty()) {
                 f += (float) (i * i + 1);
@@ -79,7 +81,8 @@ public class InventoryManager {
             f *= k;
         }
 
-        if (mc.player.isSubmergedIn(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(mc.player)) {
+        // && !aqua affinity enchantment
+        if (mc.player.isSubmergedIn(FluidTags.WATER) /*fixme && !EnchantmentHelper.hasAquaAffinity(mc.player)*/) {
             f /= 5.0F;
         }
 

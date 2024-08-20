@@ -21,7 +21,7 @@
     "unminable-miner.mixins.json"
   ],
   "custom": {
-    "meteor-client:color": "225,25,25"
+    "meteor-client:color": "73,107,190"
   },
   "depends": {
     "java": ">=17",
